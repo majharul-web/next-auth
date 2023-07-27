@@ -1,8 +1,11 @@
 import { Layout, Menu, Button } from "antd";
 const { Header } = Layout;
 import Link from "next/link";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
+
   return (
     <Header
       style={{
@@ -10,9 +13,9 @@ const Navbar = () => {
         justifyContent: "space-between",
       }}
     >
-      <div className="demo-logo">
+      <div className='demo-logo'>
         <Link
-          href="/"
+          href='/'
           style={{
             textDecoration: "none",
             color: "white",
@@ -23,8 +26,8 @@ const Navbar = () => {
         </Link>
       </div>
       <Menu
-        theme="dark"
-        mode="horizontal"
+        theme='dark'
+        mode='horizontal'
         style={{
           width: "20%",
           display: "flex",
@@ -32,20 +35,20 @@ const Navbar = () => {
           justifyContent: "space-between",
         }}
       >
-        <Link
-          style={{ textDecoration: "none", color: "white" }}
-          href="/profile"
-        >
+        <Link style={{ textDecoration: "none", color: "white" }} href='/profile'>
           <items>Profile</items>
         </Link>
-        <Link style={{ textDecoration: "none", color: "white" }} href="/login">
-          <items>Login</items>
-        </Link>
-        <items>
-          <Button type="primary" danger>
-            Logout
-          </Button>
-        </items>
+        {session?.user ? (
+          <items>
+            <Button onClick={() => signOut()} type='primary' danger>
+              Logout
+            </Button>
+          </items>
+        ) : (
+          <Link style={{ textDecoration: "none", color: "white" }} href='/login'>
+            <items>Login</items>
+          </Link>
+        )}
       </Menu>
     </Header>
   );
